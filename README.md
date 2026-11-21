@@ -21,7 +21,7 @@ python scaffold.py
 - [x] **9.** apply_preprocessor
 - [x] **10.** baseline_metrics
 - [x] **11.** train_model
-- [ ] **12.** evaluate_model
+- [x] **12.** evaluate_model
 - [ ] **13.** choose_threshold
 - [ ] **14.** targeting_report
 - [ ] **15.** top_drivers

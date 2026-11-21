@@ -530,8 +530,75 @@ def train_model(X, y, C=1.0):
     # Return the trained model.
     return model
 
-# Step 12 - evaluate_model (not yet solved)
-# TODO: implement
+# Step 12 - evaluate_model
+from sklearn.metrics import roc_auc_score
+
+
+def evaluate_model(y_true, p, threshold=0.5):
+    """
+    Evaluate a binary classification model using predicted
+    churn probabilities and a specified classification threshold.
+
+    Returns:
+        dict: AUC, precision, recall, F1-score,
+              true positives, false positives,
+              false negatives and true negatives.
+    """
+
+    # Convert actual labels and predicted probabilities
+    # into NumPy arrays for consistent calculations.
+    y_true = np.asarray(y_true).ravel()
+    p = np.asarray(p, dtype=float).ravel()
+
+    # Convert predicted probabilities into binary predictions.
+    # A customer is predicted to churn when probability >= threshold.
+    y_pred = (p >= threshold).astype(int)
+
+    # Calculate the four confusion matrix components.
+    tp = int(np.sum((y_true == 1) & (y_pred == 1)))
+    fp = int(np.sum((y_true == 0) & (y_pred == 1)))
+    fn = int(np.sum((y_true == 1) & (y_pred == 0)))
+    tn = int(np.sum((y_true == 0) & (y_pred == 0)))
+
+    # Calculate precision.
+    # Return 0.0 when there are no predicted positive cases.
+    precision = (
+        tp / (tp + fp)
+        if (tp + fp) > 0
+        else 0.0
+    )
+
+    # Calculate recall.
+    # Return 0.0 when there are no actual positive cases.
+    recall = (
+        tp / (tp + fn)
+        if (tp + fn) > 0
+        else 0.0
+    )
+
+    # Calculate the F1-score.
+    # Return 0.0 when precision and recall are both zero.
+    f1 = (
+        2 * precision * recall / (precision + recall)
+        if (precision + recall) > 0
+        else 0.0
+    )
+
+    # Calculate ROC AUC using predicted probabilities,
+    # rather than the threshold-based binary predictions.
+    auc = float(roc_auc_score(y_true, p))
+
+    # Return all evaluation metrics.
+    return {
+        "auc": auc,
+        "precision": float(precision),
+        "recall": float(recall),
+        "f1": float(f1),
+        "tp": tp,
+        "fp": fp,
+        "fn": fn,
+        "tn": tn
+    }
 
 # Step 13 - choose_threshold (not yet solved)
 # TODO: implement
