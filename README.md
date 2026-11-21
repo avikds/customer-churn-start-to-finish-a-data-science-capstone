@@ -12,7 +12,7 @@ python scaffold.py
 
 - [x] **1.** audit_table
 - [x] **2.** fix_types
-- [ ] **3.** mark_invalid
+- [x] **3.** mark_invalid
 - [ ] **4.** churn_rate_by
 - [ ] **5.** find_leaky_columns
 - [ ] **6.** add_features

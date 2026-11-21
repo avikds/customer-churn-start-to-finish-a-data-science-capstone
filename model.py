@@ -140,8 +140,28 @@ def fix_types(df):
 
     return out
 
-# Step 3 - mark_invalid (not yet solved)
-# TODO: implement
+# Step 3 - mark_invalid
+def mark_invalid(df):
+    """
+    Replace impossible age values and negative support ticket counts
+    with missing values (NaN).
+
+    Returns:
+        A cleaned copy of the original DataFrame.
+    """
+
+    # Create a copy to preserve the original DataFrame.
+    out = df.copy()
+
+    # Ages below 18 or above 100 are considered invalid.
+    # Ages exactly 18 and 100 are allowed.
+    invalid_age = (out["age"] < 18) | (out["age"] > 100)
+    out.loc[invalid_age, "age"] = np.nan
+
+    # Negative support ticket counts are considered invalid.
+    out.loc[out["support_tickets"] < 0, "support_tickets"] = np.nan
+
+    return out
 
 # Step 4 - churn_rate_by (not yet solved)
 # TODO: implement
