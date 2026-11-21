@@ -500,8 +500,35 @@ def baseline_metrics(y_train, y_test):
         "base_rate": base_rate
     }
 
-# Step 11 - train_model (not yet solved)
-# TODO: implement
+# Step 11 - train_model
+from sklearn.linear_model import LogisticRegression
+
+
+def train_model(X, y, C=1.0):
+    """
+    Train a Logistic Regression classification model.
+
+    Parameters:
+        X: Training feature matrix.
+        y: Training target values.
+        C: Inverse regularization strength (default = 1.0).
+
+    Returns:
+        A fitted LogisticRegression model.
+    """
+
+    # Initialize the Logistic Regression model.
+    model = LogisticRegression(
+        C=C,
+        max_iter=2000,
+        tol=1e-8
+    )
+
+    # Fit the model using the provided training data.
+    model.fit(X, y)
+
+    # Return the trained model.
+    return model
 
 # Step 12 - evaluate_model (not yet solved)
 # TODO: implement
