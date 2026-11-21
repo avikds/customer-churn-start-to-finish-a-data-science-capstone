@@ -16,7 +16,7 @@ python scaffold.py
 - [x] **4.** churn_rate_by
 - [x] **5.** find_leaky_columns
 - [x] **6.** add_features
-- [ ] **7.** split_customers
+- [x] **7.** split_customers
 - [ ] **8.** fit_preprocessor
 - [ ] **9.** apply_preprocessor
 - [ ] **10.** baseline_metrics

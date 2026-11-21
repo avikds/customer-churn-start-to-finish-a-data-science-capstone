@@ -282,8 +282,35 @@ def add_features(df, drop_columns, snapshot="2025-01-01"):
 
     return out
 
-# Step 7 - split_customers (not yet solved)
-# TODO: implement
+# Step 7 - split_customers
+from sklearn.model_selection import train_test_split
+
+
+def split_customers(df, test_size=0.25, seed=0):
+    """
+    Split customer data into training and testing datasets.
+
+    Uses stratified random sampling based on the churned column
+    to preserve the proportion of churned and non-churned customers.
+
+    Returns:
+        train: Training DataFrame with a reset index.
+        test: Testing DataFrame with a reset index.
+    """
+
+    # Perform a stratified random train-test split.
+    train, test = train_test_split(
+        df,
+        test_size=test_size,
+        random_state=seed,
+        stratify=df["churned"]
+    )
+
+    # Reset the indexes of both datasets, starting from 0.
+    train = train.reset_index(drop=True)
+    test = test.reset_index(drop=True)
+
+    return train, test
 
 # Step 8 - fit_preprocessor (not yet solved)
 # TODO: implement
