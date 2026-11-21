@@ -163,8 +163,39 @@ def mark_invalid(df):
 
     return out
 
-# Step 4 - churn_rate_by (not yet solved)
-# TODO: implement
+# Step 4 - churn_rate_by
+def churn_rate_by(df, column):
+    """
+    Calculate the number of customers and churn rate
+    for each unique value of the specified column.
+
+    Results are sorted by churn rate in descending order.
+    Ties are sorted alphabetically by column value.
+    Missing values in the specified column are excluded.
+    """
+
+    # Group customers by the specified column and calculate
+    # the total number of customers and average churn rate.
+    result = (
+        df.groupby(column, dropna=True)
+        .agg(
+            customers=("churned", "size"),
+            churn_rate=("churned", "mean")
+        )
+        .reset_index()
+    )
+
+    # Sort by churn rate (highest first).
+    # For equal churn rates, sort by the column value (A to Z).
+    result = result.sort_values(
+        by=["churn_rate", column],
+        ascending=[False, True]
+    )
+
+    # Reset the index to start from 0.
+    result = result.reset_index(drop=True)
+
+    return result
 
 # Step 5 - find_leaky_columns (not yet solved)
 # TODO: implement
