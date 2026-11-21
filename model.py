@@ -101,8 +101,44 @@ def audit_table(df):
         "non_numeric": non_numeric
     }
 
-# Step 2 - fix_types (not yet solved)
-# TODO: implement
+# Step 2 - fix_types
+def fix_types(df):
+    """
+    Remove exact duplicates and convert columns to usable data types.
+    Returns a cleaned copy without modifying the original DataFrame.
+    """
+
+    # Remove exact duplicate rows and reset the index.
+    out = df.drop_duplicates(keep="first").reset_index(drop=True).copy()
+
+    # Standardize categorical columns by removing surrounding
+    # whitespace and converting text to lowercase.
+    # Missing values remain missing.
+    categorical_cols = ["plan", "contract", "payment_method"]
+
+    for col in categorical_cols:
+        out[col] = out[col].str.strip().str.lower()
+
+    # Remove the dollar sign from monthly charges and convert
+    # the values to floating-point numbers.
+    # Missing values remain missing.
+    out["monthly_charge"] = (
+        out["monthly_charge"]
+        .str.replace("$", "", regex=False)
+        .astype(float)
+    )
+
+    # Convert signup_date from string to pandas datetime format.
+    out["signup_date"] = pd.to_datetime(out["signup_date"])
+
+    # Encode the churn target:
+    # Yes = 1 (churned), No = 0 (not churned).
+    out["churned"] = out["churned"].map({
+        "Yes": 1,
+        "No": 0
+    }).astype(int)
+
+    return out
 
 # Step 3 - mark_invalid (not yet solved)
 # TODO: implement

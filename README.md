@@ -11,7 +11,7 @@ python scaffold.py
 ## Steps
 
 - [x] **1.** audit_table
-- [ ] **2.** fix_types
+- [x] **2.** fix_types
 - [ ] **3.** mark_invalid
 - [ ] **4.** churn_rate_by
 - [ ] **5.** find_leaky_columns
