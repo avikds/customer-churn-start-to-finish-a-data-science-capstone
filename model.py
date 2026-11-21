@@ -197,8 +197,53 @@ def churn_rate_by(df, column):
 
     return result
 
-# Step 5 - find_leaky_columns (not yet solved)
-# TODO: implement
+# Step 5 - find_leaky_columns
+def find_leaky_columns(df, target="churned", min_present=20):
+    """
+    Identify columns that contain information revealing only one
+    particular outcome of the target variable.
+
+    A column is considered leaky when:
+    1. It contains at least one missing value.
+    2. It has at least min_present non-missing values.
+    3. All rows where it is non-missing have the same target value.
+
+    Returns:
+        list: Names of leaky columns in their original column order.
+    """
+
+    # Store the names of columns identified as leaky.
+    leaky_columns = []
+
+    # Examine each column while preserving the original column order.
+    for col in df.columns:
+
+        # The target column itself cannot be considered a feature.
+        if col == target:
+            continue
+
+        # Identify rows where the current column has a non-missing value.
+        present = df[col].notna()
+
+        # Condition 1: The column must contain at least one missing value.
+        if not df[col].isna().any():
+            continue
+
+        # Condition 2: The column must have at least min_present
+        # non-missing values.
+        if present.sum() < min_present:
+            continue
+
+        # Extract target values only for rows where the current
+        # column contains a non-missing value.
+        target_values = df.loc[present, target]
+
+        # Condition 3: All corresponding target values must be
+        # present and identical (representing exactly one outcome).
+        if target_values.notna().all() and target_values.nunique(dropna=False) == 1:
+            leaky_columns.append(col)
+
+    return leaky_columns
 
 # Step 6 - add_features (not yet solved)
 # TODO: implement
