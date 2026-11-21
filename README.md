@@ -1,2 +1,31 @@
-# customer-churn-start-to-finish-a-data-science-capstone
-Take a subscription company's messy customer export from the first look to a decision the business can act on. Audit and clean the table, find the column that gives the answer away, build features from dates and counts, and split the data once, honestly. Learn the preprocessing from the training rows only, beat a baseline with a logistic…
+# Customer Churn, Start to Finish: A Data Science Capstone
+
+Take a subscription company's messy customer export from the first look to a decision the business can act on. Audit and clean the table, find the column that gives the answer away, build features from dates and counts, and split the data once, honestly. Learn the preprocessing from the training rows only, beat a baseline with a logistic regression, and judge it on the test set. Then turn its probabilities into a cost-based threshold and a contact list with its lift, and explain what drives churn.
+
+## How to run
+
+```bash
+python scaffold.py
+```
+
+## Steps
+
+- [x] **1.** audit_table
+- [ ] **2.** fix_types
+- [ ] **3.** mark_invalid
+- [ ] **4.** churn_rate_by
+- [ ] **5.** find_leaky_columns
+- [ ] **6.** add_features
+- [ ] **7.** split_customers
+- [ ] **8.** fit_preprocessor
+- [ ] **9.** apply_preprocessor
+- [ ] **10.** baseline_metrics
+- [ ] **11.** train_model
+- [ ] **12.** evaluate_model
+- [ ] **13.** choose_threshold
+- [ ] **14.** targeting_report
+- [ ] **15.** top_drivers
+
+---
+
+Built on Deep-ML.
