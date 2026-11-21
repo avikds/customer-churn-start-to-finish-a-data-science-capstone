@@ -443,8 +443,62 @@ def apply_preprocessor(prep, df):
 
     return X, names
 
-# Step 10 - baseline_metrics (not yet solved)
-# TODO: implement
+# Step 10 - baseline_metrics
+def baseline_metrics(y_train, y_test):
+    """
+    Calculate baseline classification metrics using a majority-class
+    prediction strategy.
+
+    The model always predicts the most common class in y_train.
+    If both classes are equally common, it predicts class 0.
+
+    Returns:
+        dict: Majority class, test accuracy, test recall,
+              and training churn base rate.
+    """
+
+    # Convert inputs into NumPy arrays for consistent calculations.
+    y_train = np.asarray(y_train)
+    y_test = np.asarray(y_test)
+
+    # Count the number of churners (1) and non-churners (0)
+    # in the training dataset.
+    churn_count = np.sum(y_train == 1)
+    non_churn_count = np.sum(y_train == 0)
+
+    # Select the majority class.
+    # In case of a tie, choose class 0.
+    majority_class = int(churn_count > non_churn_count)
+
+    # The baseline always predicts the majority class
+    # for every customer in the test dataset.
+    predictions = np.full(len(y_test), majority_class)
+
+    # Calculate the proportion of correct predictions.
+    accuracy = float(np.mean(predictions == y_test))
+
+    # Identify actual churners in the test dataset.
+    actual_churners = (y_test == 1)
+
+    # Calculate recall.
+    # Return 0.0 when the test dataset contains no actual churners.
+    if np.any(actual_churners):
+        recall = float(
+            np.mean(predictions[actual_churners] == 1)
+        )
+    else:
+        recall = 0.0
+
+    # Calculate the proportion of churners in the training dataset.
+    base_rate = float(np.mean(y_train == 1))
+
+    # Return all baseline metrics.
+    return {
+        "majority_class": majority_class,
+        "accuracy": accuracy,
+        "recall": recall,
+        "base_rate": base_rate
+    }
 
 # Step 11 - train_model (not yet solved)
 # TODO: implement
