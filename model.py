@@ -600,8 +600,57 @@ def evaluate_model(y_true, p, threshold=0.5):
         "tn": tn
     }
 
-# Step 13 - choose_threshold (not yet solved)
-# TODO: implement
+# Step 13 - choose_threshold
+def choose_threshold(y_true, p, cost_fp, cost_fn):
+    """
+    Find the classification threshold that minimizes total
+    business cost across 19 thresholds from 0.05 to 0.95.
+
+    Parameters:
+        y_true: Actual binary target values.
+        p: Predicted probabilities of churn.
+        cost_fp: Cost of a false positive.
+        cost_fn: Cost of a false negative.
+
+    Returns:
+        tuple: (best_threshold, minimum_total_cost)
+    """
+
+    # Convert actual labels and predicted probabilities into NumPy arrays.
+    y_true = np.asarray(y_true).ravel()
+    p = np.asarray(p, dtype=float).ravel()
+
+    # Generate the 19 candidate thresholds from 0.05 to 0.95.
+    thresholds = np.arange(1, 20) / 20.0
+
+    # Initialize the best threshold and its corresponding cost.
+    best_threshold = None
+    best_cost = float("inf")
+
+    # Evaluate every candidate threshold.
+    for threshold in thresholds:
+
+        # Predict churn when the probability is greater than
+        # or equal to the current threshold.
+        y_pred = (p >= threshold).astype(int)
+
+        # Calculate false positives and false negatives.
+        fp = int(np.sum((y_true == 0) & (y_pred == 1)))
+        fn = int(np.sum((y_true == 1) & (y_pred == 0)))
+
+        # Calculate the total business cost.
+        total_cost = fp * cost_fp + fn * cost_fn
+
+        # Update the best result only when the cost is strictly lower.
+        # Since thresholds are evaluated in ascending order,
+        # this also preserves the smaller threshold when costs tie.
+        if total_cost < best_cost:
+            best_cost = total_cost
+            best_threshold = threshold
+
+    # Return the selected threshold rounded to two decimal places
+    # and its corresponding minimum total cost.
+    return round(float(best_threshold), 2), best_cost
 
 # Step 14 - targeting_report (not yet solved)
 # TODO: implement

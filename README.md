@@ -22,7 +22,7 @@ python scaffold.py
 - [x] **10.** baseline_metrics
 - [x] **11.** train_model
 - [x] **12.** evaluate_model
-- [ ] **13.** choose_threshold
+- [x] **13.** choose_threshold
 - [ ] **14.** targeting_report
 - [ ] **15.** top_drivers
 
