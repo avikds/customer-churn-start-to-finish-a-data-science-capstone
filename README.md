@@ -24,7 +24,7 @@ python scaffold.py
 - [x] **12.** evaluate_model
 - [x] **13.** choose_threshold
 - [x] **14.** targeting_report
-- [ ] **15.** top_drivers
+- [x] **15.** top_drivers
 
 ---
 

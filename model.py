@@ -736,6 +736,49 @@ def targeting_report(y_true, p, top_frac=0.2):
         "lift": float(lift)
     }
 
-# Step 15 - top_drivers (not yet solved)
-# TODO: implement
+# Step 15 - top_drivers
+def top_drivers(model, names, k=5):
+    """
+    Identify the k features with the largest absolute
+    Logistic Regression coefficients.
+
+    Features are ranked by absolute coefficient value,
+    with alphabetical ordering used to break ties.
+
+    Returns:
+        list: Tuples containing feature name, rounded coefficient,
+              and its direction ('raises' or 'lowers').
+    """
+
+    # Extract the coefficients from the fitted Logistic Regression model.
+    coefficients = model.coef_[0]
+
+    # Pair each feature name with its corresponding coefficient.
+    feature_coefficients = list(zip(names, coefficients))
+
+    # Sort features by:
+    # 1. Absolute coefficient value in descending order.
+    # 2. Feature name in alphabetical order when values are tied.
+    ranked_features = sorted(
+        feature_coefficients,
+        key=lambda item: (-abs(item[1]), item[0])
+    )
+
+    # Select the top k features and prepare the final results.
+    results = []
+
+    for name, coefficient in ranked_features[:k]:
+
+        # Round the coefficient to three decimal places
+        # and convert it to a standard Python float.
+        coefficient = round(float(coefficient), 3)
+
+        # Positive coefficients raise predicted churn;
+        # zero or negative coefficients lower predicted churn.
+        direction = "raises" if coefficient > 0 else "lowers"
+
+        # Store the feature name, coefficient and direction.
+        results.append((name, coefficient, direction))
+
+    return results
 
