@@ -652,8 +652,89 @@ def choose_threshold(y_true, p, cost_fp, cost_fn):
     # and its corresponding minimum total cost.
     return round(float(best_threshold), 2), best_cost
 
-# Step 14 - targeting_report (not yet solved)
-# TODO: implement
+# Step 14 - targeting_report
+def targeting_report(y_true, p, top_frac=0.2):
+    """
+    Evaluate a customer targeting strategy by contacting the
+    highest-risk customers based on predicted churn probabilities.
+
+    Parameters:
+        y_true: Actual binary churn labels.
+        p: Predicted churn probabilities.
+        top_frac: Fraction of customers to contact (default = 0.2).
+
+    Returns:
+        dict: Number of customers contacted, churners reached,
+              recall, precision, and lift.
+    """
+
+    # Convert actual labels and predicted probabilities into NumPy arrays.
+    y_true = np.asarray(y_true).ravel()
+    p = np.asarray(p, dtype=float).ravel()
+
+    # Get the total number of customers.
+    n = len(y_true)
+
+    # Handle an empty dataset.
+    if n == 0:
+        return {
+            "contacted": 0,
+            "churners_reached": 0,
+            "recall": 0.0,
+            "precision": 0.0,
+            "lift": 0.0
+        }
+
+    # Calculate the number of customers to contact.
+    # Use ceiling to round upward and ensure at least one customer.
+    contacted = min(n, max(1, int(np.ceil(top_frac * n))))
+
+    # Rank customers by predicted churn probability in descending order.
+    # Stable sorting ensures earlier customers are prioritized
+    # when two or more customers have equal probabilities.
+    ranked_indices = np.argsort(-p, kind="stable")
+
+    # Select the indices of the highest-risk customers.
+    selected_indices = ranked_indices[:contacted]
+
+    # Extract actual churn labels for the selected customers.
+    selected_actual = y_true[selected_indices]
+
+    # Count how many contacted customers actually churned.
+    churners_reached = int(np.sum(selected_actual == 1))
+
+    # Count the total number of actual churners.
+    total_churners = int(np.sum(y_true == 1))
+
+    # Calculate recall: proportion of all actual churners reached.
+    recall = (
+        churners_reached / total_churners
+        if total_churners > 0
+        else 0.0
+    )
+
+    # Calculate precision: proportion of contacted customers
+    # who actually churned.
+    precision = churners_reached / contacted
+
+    # Calculate the overall churn rate.
+    overall_churn_rate = total_churners / n
+
+    # Calculate lift relative to the overall churn rate.
+    lift = (
+        precision / overall_churn_rate
+        if overall_churn_rate > 0
+        else 0.0
+    )
+
+    # Return the targeting performance report.
+    return {
+        "contacted": int(contacted),
+        "churners_reached": churners_reached,
+        "recall": float(recall),
+        "precision": float(precision),
+        "lift": float(lift)
+    }
 
 # Step 15 - top_drivers (not yet solved)
 # TODO: implement
