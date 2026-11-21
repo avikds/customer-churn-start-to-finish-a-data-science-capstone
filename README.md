@@ -15,7 +15,7 @@ python scaffold.py
 - [x] **3.** mark_invalid
 - [x] **4.** churn_rate_by
 - [x] **5.** find_leaky_columns
-- [ ] **6.** add_features
+- [x] **6.** add_features
 - [ ] **7.** split_customers
 - [ ] **8.** fit_preprocessor
 - [ ] **9.** apply_preprocessor

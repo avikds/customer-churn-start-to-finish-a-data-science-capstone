@@ -245,8 +245,42 @@ def find_leaky_columns(df, target="churned", min_present=20):
 
     return leaky_columns
 
-# Step 6 - add_features (not yet solved)
-# TODO: implement
+# Step 6 - add_features
+def add_features(df, drop_columns, snapshot="2025-01-01"):
+    """
+    Add tenure_months and tickets_per_month features,
+    then remove the specified columns.
+
+    Returns:
+        A new DataFrame without modifying the original DataFrame.
+    """
+
+    # Create a copy to preserve the original DataFrame.
+    out = df.copy()
+
+    # Convert the snapshot date into a pandas Timestamp.
+    snapshot_date = pd.Timestamp(snapshot)
+
+    # Calculate customer tenure in months.
+    # Integer division by 30 converts the number of days into months.
+    out["tenure_months"] = (
+        (snapshot_date - out["signup_date"]).dt.days // 30
+    )
+
+    # Replace zero tenure with 1 when calculating tickets per month
+    # to prevent division by zero.
+    # Existing missing values remain missing.
+    tenure_denominator = out["tenure_months"].replace(0, 1)
+
+    # Calculate the average number of support tickets per month.
+    out["tickets_per_month"] = (
+        out["support_tickets"] / tenure_denominator
+    )
+
+    # Remove all columns specified in drop_columns.
+    out = out.drop(columns=drop_columns)
+
+    return out
 
 # Step 7 - split_customers (not yet solved)
 # TODO: implement
