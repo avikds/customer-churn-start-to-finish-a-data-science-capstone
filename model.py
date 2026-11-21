@@ -312,8 +312,68 @@ def split_customers(df, test_size=0.25, seed=0):
 
     return train, test
 
-# Step 8 - fit_preprocessor (not yet solved)
-# TODO: implement
+# Step 8 - fit_preprocessor
+def fit_preprocessor(train, numeric, categorical):
+    """
+    Learn preprocessing statistics from training data only.
+
+    Calculates:
+    - Median values for numerical columns.
+    - Mean and population standard deviation after median imputation.
+    - Sorted unique category levels for categorical columns.
+
+    Returns:
+        dict: Preprocessing information required to transform datasets.
+    """
+
+    # Initialize dictionaries to store preprocessing statistics.
+    medians = {}
+    means = {}
+    stds = {}
+    levels = {}
+
+    # Learn numerical preprocessing statistics from training data.
+    for col in numeric:
+
+        # Calculate the median, ignoring missing values.
+        # Convert the result to a standard Python float.
+        median = float(train[col].median())
+        medians[col] = median
+
+        # Fill missing numerical values using the training median.
+        filled = train[col].fillna(median)
+
+        # Calculate the mean after median imputation.
+        means[col] = float(filled.mean())
+
+        # Calculate the population standard deviation (ddof=0).
+        std = float(filled.std(ddof=0))
+
+        # Replace a zero standard deviation with 1.0
+        # to prevent division by zero during standardization.
+        if std == 0.0:
+            std = 1.0
+
+        stds[col] = std
+
+    # Learn categorical levels from training data only.
+    for col in categorical:
+
+        # Exclude missing values, identify unique categories,
+        # and sort them in ascending order.
+        levels[col] = sorted(
+            train[col].dropna().unique().tolist()
+        )
+
+    # Return all learned preprocessing information.
+    return {
+        "numeric": list(numeric),
+        "categorical": list(categorical),
+        "median": medians,
+        "mean": means,
+        "std": stds,
+        "levels": levels
+    }
 
 # Step 9 - apply_preprocessor (not yet solved)
 # TODO: implement

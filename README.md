@@ -17,7 +17,7 @@ python scaffold.py
 - [x] **5.** find_leaky_columns
 - [x] **6.** add_features
 - [x] **7.** split_customers
-- [ ] **8.** fit_preprocessor
+- [x] **8.** fit_preprocessor
 - [ ] **9.** apply_preprocessor
 - [ ] **10.** baseline_metrics
 - [ ] **11.** train_model
