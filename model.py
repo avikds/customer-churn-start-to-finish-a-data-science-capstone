@@ -375,8 +375,73 @@ def fit_preprocessor(train, numeric, categorical):
         "levels": levels
     }
 
-# Step 9 - apply_preprocessor (not yet solved)
-# TODO: implement
+# Step 9 - apply_preprocessor
+def apply_preprocessor(prep, df):
+    """
+    Apply previously learned preprocessing statistics to a DataFrame.
+
+    Numerical columns:
+    - Fill missing values using stored training medians.
+    - Standardize using stored training means and standard deviations.
+
+    Categorical columns:
+    - Perform one-hot encoding using stored training category levels.
+    - Unknown and missing categories are encoded as all zeros.
+
+    Returns:
+        X: A 2D NumPy array containing floating-point features.
+        names: List of feature names corresponding to the columns of X.
+    """
+
+    # Store transformed columns and their corresponding feature names.
+    features = []
+    names = []
+
+    # Process numerical columns in the order specified in prep.
+    for col in prep["numeric"]:
+
+        # Fill missing values using the median learned from training data.
+        values = df[col].fillna(prep["median"][col]).to_numpy(dtype=float)
+
+        # Standardize using the training mean and standard deviation.
+        standardized = (
+            (values - prep["mean"][col]) / prep["std"][col]
+        )
+
+        # Append the standardized feature and its name.
+        features.append(standardized)
+        names.append(col)
+
+    # Process categorical columns in the order specified in prep.
+    for col in prep["categorical"]:
+
+        # Use only the category levels learned from training data.
+        for level in prep["levels"][col]:
+
+            # Create a binary indicator for the current category.
+            # Missing values and previously unseen categories become 0.
+            encoded = (
+                df[col]
+                .eq(level)
+                .fillna(False)
+                .to_numpy(dtype=float)
+            )
+
+            # Append the encoded feature.
+            features.append(encoded)
+
+            # Name the feature using the column and category level.
+            names.append(f"{col}={level}")
+
+    # Combine all features into a 2D NumPy array.
+    # Each feature becomes one column.
+    if features:
+        X = np.column_stack(features).astype(float)
+    else:
+        # Handle the case where no features are provided.
+        X = np.empty((len(df), 0), dtype=float)
+
+    return X, names
 
 # Step 10 - baseline_metrics (not yet solved)
 # TODO: implement

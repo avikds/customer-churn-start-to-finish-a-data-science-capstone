@@ -18,7 +18,7 @@ python scaffold.py
 - [x] **6.** add_features
 - [x] **7.** split_customers
 - [x] **8.** fit_preprocessor
-- [ ] **9.** apply_preprocessor
+- [x] **9.** apply_preprocessor
 - [ ] **10.** baseline_metrics
 - [ ] **11.** train_model
 - [ ] **12.** evaluate_model
